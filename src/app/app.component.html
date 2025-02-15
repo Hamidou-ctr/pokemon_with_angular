@@ -2,10 +2,25 @@
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
 
+
+
+<app-more-pokemon-page></app-more-pokemon-page>
+
+
+
+<!--
+dream_world
+showdown
+home
+
+
+
+
+
 <input type="text" placeholder="Search Pokémon" [(ngModel)]="searchText" (input)="filterPokemon()" />
 
 <section>
-  <div *ngFor="let pokemon of filteredPokemon" data-aos="zoom-out-down">
+  <div *ngFor="let pokemon of filteredPokemon" (click)="onNoClick($event, pokemon)">
     <h1>{{ pokemon.name }}</h1>
     <p *ngIf="pokemon.types">{{ pokemon.types?.type?.name }}</p>
     <img [src]="pokemon.sprites?.other?.dream_world?.front_default" alt="{{ pokemon.name }}">
@@ -15,6 +30,14 @@
 <button (click)="loadMore()">Mehr laden</button>
 
 
+
+
+(click)="onNoClick($event)"
+
+
+Hier fügst du die Popup-Komponente hinzu
+<app-more-pokemon-page *ngIf="isPopupOpen" [pokemon]="selectedPokemon"></app-more-pokemon-page>
+-->
 <!-- 
 <div data-aos="fade-up"
      data-aos-anchor-placement="bottom-center">

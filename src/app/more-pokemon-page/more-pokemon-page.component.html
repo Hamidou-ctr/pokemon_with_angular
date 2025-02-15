@@ -1,1 +1,11 @@
-<p>more-pokemon-page works!</p>
+<input type="text" placeholder="Search Pokémon" [(ngModel)]="searchText" (input)="filterPokemon()" />
+
+<section>
+  <div *ngFor="let pokemon of filteredPokemon" (click)="onNoClick($event, pokemon)">
+    <h1>{{ pokemon.name }}</h1>
+    <p *ngIf="pokemon.types">{{ pokemon.types?.type?.name }}</p>
+    <img [src]="pokemon.sprites?.other?.dream_world?.front_default" alt="{{ pokemon.name }}">
+  </div>
+</section>
+
+<button (click)="loadMore()">Mehr laden</button>

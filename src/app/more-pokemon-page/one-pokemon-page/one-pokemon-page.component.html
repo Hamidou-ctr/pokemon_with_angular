@@ -1,1 +1,7 @@
-<p>one-pokemon-page works!</p>
+
+<section>
+    <h1>{{ data.pokemon.name }}</h1>
+    <p *ngIf="data.pokemon.types">{{ data.pokemon.types?.type?.name }}</p>
+    <img [src]="data.pokemon.sprites?.other?.dream_world?.front_default" alt="{{ data.pokemon.name }}">
+    <button (click)="onNoClick()">Close</button>
+</section>

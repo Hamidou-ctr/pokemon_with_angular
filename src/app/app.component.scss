@@ -14,9 +14,10 @@ section {
   align-items: center;
   flex-wrap: wrap;
   gap: 24px;
+
   div {
-    width: 200px;
-    height: 200px;
+    width: 250px;
+    height: 250px;
     top: 24px;
     display: flex;
     justify-content: center;
@@ -26,6 +27,7 @@ section {
     border-radius: 16px;
     transition: transform 0.5s;
     opacity: 0.8;
+    background-color: rgb(72, 61, 61);
     animation: myAnim 1s ease 0.2s 1 normal both;
 
     img {
