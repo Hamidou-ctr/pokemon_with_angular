@@ -5,6 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { OnePokemonPageComponent } from './one-pokemon-page/one-pokemon-page.component';
 
 @Component({
   selector: 'app-more-pokemon-page',
@@ -60,10 +61,10 @@ export class MorePokemonPageComponent {
 
   // Function to open the dialog
   openDialog(pokemon: any): void {
-    const dialogRef = this.dialog.open(MorePokemonPageComponent, {
-      data: { pokemon }
+    const dialogRef = this.dialog.open(OnePokemonPageComponent, {
+      data: { pokemon }, // Pokémon-Daten weitergeben
     });
-
+  
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
     });
@@ -74,50 +75,3 @@ export class MorePokemonPageComponent {
     this.openDialog(pokemon);
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* 
-
-import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { CommonModule } from '@angular/common';
-
-@Component({
-  selector: 'app-more-pokemon-page',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './more-pokemon-page.component.html',
-  styleUrls: ['./more-pokemon-page.component.scss']
-})
-export class MorePokemonPageComponent {
-  constructor(
-    public dialogRef: MatDialogRef<MorePokemonPageComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any
-  ) {}
-
-  onNoClick(): void {
-    this.dialogRef.close();
-  }
-}
-*/

@@ -4,4 +4,13 @@
     <p *ngIf="data.pokemon.types">{{ data.pokemon.types?.type?.name }}</p>
     <img [src]="data.pokemon.sprites?.other?.dream_world?.front_default" alt="{{ data.pokemon.name }}">
     <button (click)="onNoClick()">Close</button>
+
+    <div *ngIf="data.pokemon.stats">
+        <h2>Stats</h2>
+        <ul>
+            <li *ngFor="let stat of data.pokemon.stats">
+                <p>{{ stat.stat.name }}: {{ stat.base_stat }}</p>
+            </li>
+        </ul>
+    </div>
 </section>
