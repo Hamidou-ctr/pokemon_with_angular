@@ -89,7 +89,12 @@ img {
 }
 
 
-
+.pokemon-types {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 50%;
+}
 
 .load-more-container {
   display: flex;
