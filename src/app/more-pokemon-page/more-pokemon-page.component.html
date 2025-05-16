@@ -1,12 +1,62 @@
-<input type="text" placeholder="Search Pokémon" [(ngModel)]="searchText" (input)="filterPokemon()" />
+<input
+  type="text"
+  placeholder="Search Pokémon"
+  [(ngModel)]="searchText"
+  (input)="filterPokemon()"
+/>
+<section class="pokemon-list">
+  <div
+    class="pokemon-card"
+    *ngFor="let pokemon of filteredPokemon"
+    (click)="onNoClick($event, pokemon)"
+  >
+    <div class="pokemon-info">
 
-<section>
-  <div *ngFor="let pokemon of filteredPokemon" (click)="onNoClick($event, pokemon)">
-    <h1>{{ pokemon.name }}</h1>
-    <h2>{{ pokemon.name.id }}</h2>
-   <!--  <p *ngIf="pokemon.types">{{ pokemon.types?.type?.name }}</p> -->
-    <img [src]="pokemon.sprites?.other?.dream_world?.front_default" alt="{{ pokemon.name }}">
+      <h1>{{ pokemon.name }}</h1>
+      <h2>{{ pokemon.id }}</h2>
+
+    </div>
+    <img [src]="pokemon.imageUrl" [alt]="pokemon.name" />
+    <div class="pokemon-types" *ngIf="pokemon.types">
+      <span *ngFor="let type of pokemon.types">{{ type.type.name }}</span>
+    </div>
   </div>
 </section>
 
-<button (click)="loadMore()">Mehr laden</button>
+<div class="load-more-container">
+  <button (click)="loadMore()">Mehr laden</button>
+</div>
+
+
+<!-- 
+
+<input
+  type="text"
+  placeholder="Search Pokémon"
+  [(ngModel)]="searchText"
+  (input)="filterPokemon()"
+/>
+<section class="pokemon-list">
+  <div
+    class="pokemon-card"
+    *ngFor="let pokemon of filteredPokemon"
+    (click)="onNoClick($event, pokemon)"
+  >
+    <div class="pokemon-info"></div>
+      <h1 class="pokemon-name">{{ pokemon.name }}</h1>
+      <h2 class="pokemon-id">{{ pokemon.id }}</h2>
+    </div>
+    <img class="pokemon-image" [src]="pokemon.imageUrl" [alt]="pokemon.name" />
+    <div class="pokemon-types" *ngIf="pokemon.types">
+      <span class="pokemon-type" *ngFor="let type of pokemon.types">{{ type.type.name }}</span>
+    </div>
+  </div>
+</section>
+
+<div class="load-more-container">
+  <button class="load-more-button" (click)="loadMore()">Mehr laden</button>
+</div>
+
+
+
+-->

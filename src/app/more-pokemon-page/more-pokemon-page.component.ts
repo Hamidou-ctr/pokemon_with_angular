@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
@@ -7,6 +6,41 @@ import { FormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { OnePokemonPageComponent } from './one-pokemon-page/one-pokemon-page.component';
 
+interface PokemonType {
+  type: {
+    name: string;
+  };
+}
+
+interface PokemonSprites {
+  other: {
+    dream_world: {
+      front_default: string;
+    };
+  };
+}
+
+interface PokemonDetails {
+  name: string;
+  sprites: PokemonSprites;
+  types: PokemonType[];
+}
+
+interface Pokemon {
+  name: string;
+  url: string;
+  imageUrl?: string;
+  types?: PokemonType[];
+  id?: number; 
+
+}
+
+interface PokemonApiResponse {
+  results: Pokemon[];
+  next: string;
+}
+
+
 @Component({
   selector: 'app-more-pokemon-page',
   standalone: true,
@@ -14,64 +48,123 @@ import { OnePokemonPageComponent } from './one-pokemon-page/one-pokemon-page.com
   templateUrl: './more-pokemon-page.component.html',
   styleUrls: ['./more-pokemon-page.component.scss']
 })
-export class MorePokemonPageComponent {
+export class MorePokemonPageComponent implements OnInit {
   baseUrl: string = "https://pokeapi.co/api/v2/pokemon/";
-  allpokemon: any[] = [];
-  filteredPokemon: any[] = [];
+  allPokemon: Pokemon[] = [];
+  filteredPokemon: Pokemon[] = [];
   nextUrl: string = '';
   searchText: string = '';
 
- constructor(private http: HttpClient, public dialog: MatDialog) {
-  }
+  constructor(private http: HttpClient, public dialog: MatDialog) {}
 
   ngOnInit() {
     this.loadPokemons(this.baseUrl);
   }
 
-  async loadPokemons(url: string) {
-    this.http.get<any>(url).subscribe(data => {
-      this.allpokemon = this.allpokemon.concat(data.results);
-      this.filteredPokemon = this.allpokemon; // Initialize filteredPokemon with all Pokemon
+  loadPokemons(url: string): void {
+    this.http.get<PokemonApiResponse>(url).subscribe(data => {
+      this.allPokemon = [...this.allPokemon, ...data.results];
+      this.filteredPokemon = [...this.allPokemon];
       this.nextUrl = data.next;
 
-      console.log(this.allpokemon);
+      this.allPokemon.forEach(pokemon => {
+        const id = pokemon.url.split('/')[6];
+        pokemon.id = parseInt(id, 10);
+        pokemon.name = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
+        pokemon.imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`;
+        console.log(pokemon.name);
+        console.log(pokemon.id);
+      });
+      this.allPokemon.sort((a, b) => (a.id || 0) - (b.id || 0));
+      console.log(this.allPokemon);
 
-      data.results.forEach((pokemon: any) => {
-        this.http.get<any>(pokemon.url).subscribe(details => {
-          if (details.sprites && details.sprites.other && details.sprites.other.dream_world) {
-            pokemon.sprites = details.sprites;
-            //console.log(details.sprites.other.dream_world.front_default);
-          }
+      data.results.forEach(pokemon => {
+        this.http.get<PokemonDetails>(pokemon.url).subscribe(details => {
+          pokemon.imageUrl = details.sprites.other?.dream_world?.front_default || '';
+          pokemon.types = details.types;
         });
       });
     });
   }
 
-  loadMore() {
+  loadMore(): void {
     if (this.nextUrl) {
       this.loadPokemons(this.nextUrl);
-      console.log(this.nextUrl);
     }
   }
 
-  // Filter function to update the displayed Pokémon based on the search text
-  filterPokemon() {
-    this.filteredPokemon = this.allpokemon.filter(pokemon => pokemon.name.toLowerCase().includes(this.searchText.toLowerCase()));
+  filterPokemon(): void {
+    if (!this.searchText) {
+      this.filteredPokemon = [...this.allPokemon];
+      return;
+    }
+    
+    const searchTerm = this.searchText.toLowerCase();
+    this.filteredPokemon = this.allPokemon.filter(pokemon => 
+      pokemon.name.toLowerCase().includes(searchTerm)
+    );
   }
 
-  // Function to open the dialog
-  openDialog(pokemon: any): void {
-    const dialogRef = this.dialog.open(OnePokemonPageComponent, {
-      data: { pokemon }, // Pokémon-Daten weitergeben
-    });
-  
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
+  openDialog(pokemon: Pokemon): void {
+    this.dialog.open(OnePokemonPageComponent, {
+      data: { pokemon },
     });
   }
 
-  onNoClick(event: any, pokemon: any): void {
+  onNoClick(event: Event, pokemon: Pokemon): void {
     event.stopPropagation();
     this.openDialog(pokemon);
   }
 }
+
+
+
+
+/* 
+
+interface Pokemon {
+  name: string;
+  url: string;
+  imageUrl?: string;
+  types?: PokemonType[];
+  id?: number; 
+  sprites?: PokemonSprites;
+  abilities?: { ability: { name: string } }[];
+  stats?: { base_stat: number; stat: { name: string } }[];
+  height?: number;
+  weight?: number;
+  base_experience?: number;
+  moves?: { move: { name: string } }[];
+  species?: { name: string };
+  habitat?: { name: string };
+  color?: { name: string };
+  shape?: { name: string };
+  flavor_text_entries?: { flavor_text: string; language: { name: string } }[];
+
+}
+
+
+
+  TypesPokémon:  [
+    'normal',
+    'fighting',
+    'flying',
+    'poison',
+    'ground',
+    'rock',
+    'bug',
+    'ghost',
+    'steel',
+    'fire',
+    'water',
+    'grass',
+    'electric',
+    'psychic',
+    'ice',
+    'dragon',
+    'dark',
+    'fairy',
+    'unknown',
+    'shadow'
+  ]
+*/
